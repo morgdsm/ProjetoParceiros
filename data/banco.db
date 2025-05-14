@@ -1,0 +1,35 @@
+# Crie um arquivo setup_db.py para inicializar o banco de dados
+import sqlite3
+
+def setup_db():
+    conn = sqlite3.connect('data/banco.db')
+    cursor = conn.cursor()
+    
+    # Tabela de parceiros
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS parceiros (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT NOT NULL,
+        email TEXT,
+        telefone TEXT
+    )
+    ''')
+    
+    # Tabela de tarefas
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS tarefas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        descricao TEXT NOT NULL,
+        status TEXT NOT NULL,
+        parceiro_id INTEGER,
+        prazo DATE,
+        FOREIGN KEY (parceiro_id) REFERENCES parceiros(id)
+    )
+    ''')
+
+    conn.commit()
+    conn.close()
+
+if __name__ == "__main__":
+    setup_db()
+    print("Banco de dados configurado com sucesso!")
